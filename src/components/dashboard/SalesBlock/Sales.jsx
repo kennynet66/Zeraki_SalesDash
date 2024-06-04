@@ -10,20 +10,40 @@ const SalesBlock = () => {
   const [totalRevenue, setTotalRevenue] = useState(null);
   const [bouncedCheques, setBouncedCheques] = useState(null);
 
+  const jsonAPI = 'https://api.jsonbin.io/v3/b/665f6148ad19ca34f874390c';
+
   useEffect(() => {
     // Fetch data from both endpoints
     const fetchData = async () => {
       try {
         // Fetch data from the invoices endpoint
-        const invoicesResponse = await axios.get("http://localhost:3000/invoices");
-        const invoicesData = invoicesResponse.data;
+        const invoicesResponse = await axios.get(jsonAPI, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key":
+              "$2a$10$/RhQmk2zYw4xtf0MVIJr4uj970fHpVTHT6tHcA0o33Gc.1r1SNSlu",
+            "X-Access-Key":
+              "$2a$10$L9mMYG9Ndi29Uz48lyd6yeYvQsy52Pz79s4yWuKjFNQ3SZlIZpBC2",
+          }
+        });
+        const invoicesData = invoicesResponse.data.record.invoices;
 
         // Fetch data from the schools endpoint
-        const schoolsResponse = await axios.get("http://localhost:3000/schools");
-        const schoolsData = schoolsResponse.data;
+        const schoolsResponse = await axios.get(jsonAPI, {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key":
+              "$2a$10$/RhQmk2zYw4xtf0MVIJr4uj970fHpVTHT6tHcA0o33Gc.1r1SNSlu",
+            "X-Access-Key":
+              "$2a$10$L9mMYG9Ndi29Uz48lyd6yeYvQsy52Pz79s4yWuKjFNQ3SZlIZpBC2",
+          }
+        });
+        const schoolsData = schoolsResponse.data.record.schools;
 
         // Calculate collections
-        const totalCollection = schoolsData.reduce((acc, curr) => acc + curr.schoolBalance, 0);
+        const totalCollection = schoolsData.reduce((acc, curr) => {
+          return acc + curr.schoolBalance;
+        }, 0);
         setCollection(totalCollection);
 
         // Calculate sign-ups
@@ -42,8 +62,8 @@ const SalesBlock = () => {
       }
     };
 
-    fetchData(); // Call the fetchData function
-  }, []); // Empty dependency array to run the effect only once
+    fetchData();
+  }, []);
 
   return (
     <SalesBlockWrap>

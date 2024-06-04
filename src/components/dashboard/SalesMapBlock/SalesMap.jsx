@@ -5,9 +5,19 @@ import { BlockContentWrap, BlockTitle } from "../../../styles/global/default";
 const InvoiceTable = () => {
   const [invoices, setInvoices] = useState([]);
 
+  const JSONAPI = "https://api.jsonbin.io/v3/b/6658da63acd3cb34a85042f3";
+
   useEffect(() => {
     // Fetch invoice data from the API
-    fetch("http://localhost:3000/invoices")
+    fetch(JSONAPI, {
+      headers: {
+        // "Content-Type": "application/json",
+        "X-Master-Key":
+          "$2a$10$/RhQmk2zYw4xtf0MVIJr4uj970fHpVTHT6tHcA0o33Gc.1r1SNSlu",
+        "X-Access-Key":
+          "$2a$10$L9mMYG9Ndi29Uz48lyd6yeYvQsy52Pz79s4yWuKjFNQ3SZlIZpBC2",
+      }
+    })
       .then((response) => response.json())
       .then((data) => setInvoices(data.map(({ id, schoolName, invoiceNumber, amountDue, dueDate }) => ({ id, schoolName, invoiceNumber, amountDue, dueDate }))))
       .catch((error) => console.error("Error fetching invoices data:", error));
