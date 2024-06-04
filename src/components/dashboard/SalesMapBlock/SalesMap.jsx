@@ -19,7 +19,7 @@ const InvoiceTable = () => {
       }
     })
       .then((response) => response.json())
-      .then((data) => setInvoices(data.map(({ id, schoolName, invoiceNumber, amountDue, dueDate }) => ({ id, schoolName, invoiceNumber, amountDue, dueDate }))))
+      .then((data) => setInvoices(data.record.schools.map(({ id, schoolName, invoiceNumber, amountDue, dueDate }) => ({ id, schoolName, invoiceNumber, amountDue, dueDate }))))
       .catch((error) => console.error("Error fetching invoices data:", error));
   }, []);
 
