@@ -11,11 +11,21 @@ const Schools = () => {
     fetchSchoolData();
   }, []);
 
-  const fetchSchoolData = () => {
-    fetch("http://localhost:3000/schools")
-      .then((response) => response.json())
-      .then((data) => setSchoolData(data))
-      .catch((error) => console.error("Error fetching school data:", error));
+  const fetchSchoolData = async () => {
+    const response = await fetch("https://api.jsonbin.io/v3/b/6658da63acd3cb34a85042f3", {
+      headers: {
+        "Content-Type": "application/json",
+        "X-Master-Key":
+          "$2a$10$/RhQmk2zYw4xtf0MVIJr4uj970fHpVTHT6tHcA0o33Gc.1r1SNSlu",
+        "X-Access-Key":
+          "$2a$10$L9mMYG9Ndi29Uz48lyd6yeYvQsy52Pz79s4yWuKjFNQ3SZlIZpBC2",
+      },
+    });
+
+    const data = await response.json()
+
+    setSchoolData(data.record.schools);
+
   };
 
   const openModal = () => {
@@ -27,8 +37,8 @@ const Schools = () => {
   };
 
   const handleSaveSchool = (formData) => {
-    fetch("http://localhost:3000/schools", {
-      method: "POST",
+    fetch("https://api.jsonbin.io/v3/b/6658da63acd3cb34a85042f3", {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -63,7 +73,6 @@ const Schools = () => {
                   <th>Invoice Number</th>
                   <th>Collections</th>
                   <th>Due Date</th>
-                  <th>Balance</th>
                   <th>Quick Action</th>
                 </tr>
               </thead>
@@ -76,7 +85,6 @@ const Schools = () => {
       <td>{school.invoiceNumber}</td>
       <td>{school.collection}</td>
       <td>{school.dueDate}</td>
-      <td>${school.schoolBalance ? school.schoolBalance.toLocaleString() : ''}</td>
       <td className="quick-action">
         <button className="view">View</button>
         <button className="update">Update</button>

@@ -5,12 +5,31 @@ const Invoices = () => {
   const [invoices, setInvoices] = useState([]);
 
   useEffect(() => {
-    // Fetch invoices data from the API
-    fetch("http://localhost:3000/invoices")
-      .then((response) => response.json())
-      .then((data) => setInvoices(data))
-      .catch((error) => console.error("Error fetching invoices data:", error));
+    fetchInvoices();
   }, []);
+
+  const fetchInvoices = async () => {
+    try {
+      const response = await fetch(
+        "https://api.jsonbin.io/v3/b/6658da63acd3cb34a85042f3",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key":
+              "$2a$10$/RhQmk2zYw4xtf0MVIJr4uj970fHpVTHT6tHcA0o33Gc.1r1SNSlu",
+            "X-Access-Key":
+              "$2a$10$L9mMYG9Ndi29Uz48lyd6yeYvQsy52Pz79s4yWuKjFNQ3SZlIZpBC2",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      setInvoices(data.record.invoices)
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="invoices">
@@ -34,6 +53,7 @@ const Invoices = () => {
           <tbody>
             {invoices.map((invoice, index) => (
               <tr key={invoice.id}>
+                {console.log("Invoice",invoice)}
                 <td>{index + 1}</td>
                 <td>{invoice.invoiceNumber}</td>
                 <td>{invoice.schoolName}</td>
